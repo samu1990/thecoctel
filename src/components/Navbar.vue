@@ -9,11 +9,6 @@
       </v-toolbar-title>
       <v-spacer></v-spacer>
       <v-list-tile>
-        <router-link :to="{ name: 'home' }">
-          <v-icon x-large class="black--text">fas fa-home</v-icon>
-        </router-link>
-      </v-list-tile>
-      <v-list-tile>
         <router-link :to="{ name: 'search' }">
           <v-icon x-large class="black--text">fas fa-search</v-icon>
         </router-link>

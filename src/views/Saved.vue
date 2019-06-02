@@ -15,7 +15,7 @@
         </router-link>
       </v-flex>
       <v-flex x6 v-if="!myfav">
-        <v-img :src="require('../assets/logo.png')" class="logoPag"></v-img>
+        <v-img :src="require('../assets/logo.png')" class="logoPag iconoHome"></v-img>
       </v-flex>
     </v-layout>
   </div>
@@ -74,5 +74,29 @@ export default {
 .myfav .logoPag {
   width: 50%;
   margin: 0 25%;
+}
+.iconoHome {
+  animation: shake 1s infinite cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+@keyframes shake {
+  20%,
+  80% {
+    transform: translate3d(2px, 0, 0);
+  }
+
+  30%,
+  50%,
+  70% {
+    transform: translate3d(-4px, 0, 0);
+  }
+
+  40%,
+  60% {
+    transform: translate3d(4px, 0, 0);
+  }
 }
 </style>
