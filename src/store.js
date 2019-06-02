@@ -1,0 +1,56 @@
+import Vue from 'vue'
+import Vuex from 'vuex'
+import { auth, db } from "@/firebase";
+import router from "@/router";
+
+Vue.use(Vuex)
+
+export default new Vuex.Store({
+  state: {
+    usuario: ''
+  },
+  mutations: {
+    nuevoUsuario(state, payload) {
+      if (payload === null) {
+        state.usuario = ''
+      } else {
+        state.usuario = payload
+        console.log(payload)
+      }
+    }
+  },
+  actions: {
+    async setUsuario({ commit }, user) {
+      try {
+        const doc = await db.collection('usuarios').doc(user.uid).get()
+        if (doc.exists) {
+          commit('nuevoUsuario', doc.data())
+        } else {
+          const usuario = {
+            nombre: user.displayName,
+            email: user.email,
+            uid: user.uid,
+            foto: user.photoURL,
+            Myfav: []
+          };
+          await db
+            .collection("usuarios")
+            .doc(usuario.uid)
+            .set(usuario);
+          commit('nuevoUsuario', usuario)
+          console.log('user:', this.usuario);
+        }
+
+      } catch (error) {
+        //console.log(error);
+      }
+
+    },
+    cerrarSession({ commit }) {
+      auth.signOut()
+      commit('nuevoUsuario', null)
+      router.push({ name: 'ingreso' })
+      console.log('Cerrar Seccion');
+    }
+  }
+})
