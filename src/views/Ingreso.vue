@@ -1,6 +1,6 @@
 <template>
   <div id="LOGIN">
-    <v-layout justify-center mt-5>
+    <v-layout justify-center>
       <v-flex xs12 sm8 md6 xl4>
         <v-card class="text-xs-center">
           <v-card-text>
@@ -69,7 +69,9 @@ export default {
 .v-card__text {
   padding: 10px;
 }
-
+#LOGIN > div {
+  padding: 25% 4%;
+}
 #LOGIN > div > div > div {
   background-color: white;
   border-radius: 10px;
