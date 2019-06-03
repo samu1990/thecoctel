@@ -51,9 +51,13 @@
               && bebida.drinks[0]['strIngredient' + (index+1)]!=' '"
             >
               <td>
-                <img
-                  :src="'https://www.thecocktaildb.com/images/ingredients/'+bebida.drinks[0]['strIngredient' + (index+1)]+'.png'"
+                <router-link
+                  :to="{name:'indredient',params:{id:bebida.drinks[0]['strIngredient' + (index+1)]}}"
                 >
+                  <img
+                    :src="'https://www.thecocktaildb.com/images/ingredients/'+bebida.drinks[0]['strIngredient' + (index+1)]+'.png'"
+                  >
+                </router-link>
               </td>
               <td class="name">
                 <p>{{bebida.drinks[0]['strIngredient' + (index+1)]}}</p>

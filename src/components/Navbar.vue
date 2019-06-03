@@ -56,11 +56,12 @@ export default {
           to: { name: "saved" },
           logo: "fas fa-heart"
         },
+        /*
         {
           title: "Drinks ",
           to: { name: "drinks" },
           logo: "fas fa-cocktail"
-        },
+        },*/
         {
           title: "Category",
           to: { name: "categories" },

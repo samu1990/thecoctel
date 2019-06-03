@@ -114,4 +114,16 @@ figure img {
 .layout.resultados.wrap {
   padding-top: 43%;
 }
+.filtro .fijo {
+  position: fixed;
+  width: 100%;
+  background-color: black;
+  z-index: 1;
+  padding-top: 1%;
+}
+
+.filtro .resultados {
+  margin: 0 4%;
+  padding-top: 45%;
+}
 </style>

@@ -5,6 +5,7 @@
         <v-layout row wrap>
           <v-flex xs4>
             <v-img
+              class="pt-2"
               :src="'https://www.thecocktaildb.com/images/ingredients/'+ingredient.ingredients[0].strIngredient+'.png'"
             ></v-img>
           </v-flex>
@@ -88,9 +89,12 @@ figure {
 
 .ingredient .resultados {
   margin: 0 4%;
-  padding-top: 41%;
+  padding-top: 45%;
 }
 .ingredient .container {
   padding: 0;
+}
+.fijo .v-image__image.v-image__image--cover {
+  margin-top: 4%;
 }
 </style>
