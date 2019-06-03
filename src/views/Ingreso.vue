@@ -4,7 +4,7 @@
       <v-flex xs12 sm8 md6 xl4>
         <v-card class="text-xs-center">
           <v-card-text>
-            <v-img :src="require('../assets/logo.png')" class="logoPag"></v-img>
+            <v-img :src="require('../assets/logo.png')" class="logoPag iconoHome"></v-img>
             <p class="text-uppercase display-2 font-weight-bold">THE-COCKTAIL</p>
             <p
               class="display-1"
