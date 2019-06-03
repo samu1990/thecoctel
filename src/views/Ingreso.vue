@@ -20,9 +20,15 @@
               <v-icon left dark>fab fa-facebook-square</v-icon>Facebook
             </v-btn>
           </v-card-text>
+          <v-card-text></v-card-text>
         </v-card>
       </v-flex>
     </v-layout>
+    <div class="future">
+      <p class="title mb-2 text-uppercase">*Future versions</p>
+      <p class>-Login with facebook</p>
+      <p class>-Instructions in Spanish and French</p>
+    </div>
   </div>
 </template>
 
@@ -71,6 +77,7 @@ export default {
 }
 #LOGIN > div {
   padding: 25% 4%;
+  padding-bottom: 0;
 }
 #LOGIN > div > div > div {
   background-color: white;
@@ -78,5 +85,10 @@ export default {
 }
 #LOGIN .v-btn {
   margin-bottom: 5%;
+}
+#LOGIN .future {
+  padding: 5% 4%;
+  color: white;
+  text-align: center;
 }
 </style>
