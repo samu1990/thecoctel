@@ -1,6 +1,6 @@
 <template>
   <div class="search">
-    <h1 class="Title">search</h1>
+    <h1 class="Title" :style="busqueda==true?'margin: 2% 0;':''">search</h1>
     <v-layout wrap class="filtro" justify-center>
       <v-flex xs8>
         <input
@@ -16,31 +16,38 @@
           <v-icon>fas fa-angle-right</v-icon>
         </v-btn>
       </v-flex>
-      <v-flex xs5 v-if="bebidas.length > 0 ||ingredient.length > 0">
-        <v-btn
-          color="blue-grey"
-          class="white--text"
-          @click="ingra=false"
-          :disabled="bebidas[0]==null"
-          :class="ingra?'':'actived'"
-        >
-          <v-icon left dark>fas fa-cocktail</v-icon>Drinks
-        </v-btn>
-      </v-flex>
-      <v-flex xs5 v-if="bebidas.length > 0 ||ingredient.length > 0">
-        <v-btn
-          color="blue-grey"
-          class="white--text"
-          @click="ingra=true"
-          :disabled="ingredient[0]==null"
-          :class="ingra?'actived':''"
-        >
-          <v-icon left dark>fas fa-shopping-basket</v-icon>Ingredients
-        </v-btn>
+      <v-flex xs12 v-if="busqueda">
+        <v-layout wrap justify-center>
+          <v-flex xs4 class="p-3">
+            <button
+              block
+              color="blue-grey"
+              class="white--text"
+              @click="divingra=false,divBebida=true"
+              :disabled="bebidas.length==0"
+              :class="bebidas.length>0?'actived':'desactived'"
+            >
+              <v-icon class="white--text">fas fa-cocktail</v-icon>
+              <p>Drinks</p>
+            </button>
+          </v-flex>
+          <v-flex xs4 class="p-3">
+            <button
+              color="blue-grey"
+              class="white--text"
+              @click="divingra=true,divBebida=false"
+              :disabled="ingredient.length==0"
+              :class="ingredient.length>0?'actived':'desactived'"
+            >
+              <v-icon dark>fas fa-shopping-basket</v-icon>
+              <p>Ingredients</p>
+            </button>
+          </v-flex>
+        </v-layout>
       </v-flex>
     </v-layout>
     <v-layout wrap class="resultados">
-      <v-flex xs4 v-for="(item, index) in bebidas[0]" :key="index" v-if="!ingra">
+      <v-flex xs4 v-for="(item, index) in bebidas" :key="index" v-if="divBebida">
         <router-link :to="{name:'coctel',params:{id:item.idDrink}}">
           <figure>
             <img :src="item.strDrinkThumb">
@@ -48,15 +55,19 @@
           </figure>
         </router-link>
       </v-flex>
-      <v-flex xs4 v-for="(item, index) in ingredient['0']" :key="index" v-if="ingra">
-        <router-link :to="{name:'indredient',params:{id:item.strIngredient}}">
+      <v-flex xs4 v-for="(item, index) in ingredient" :key="index" v-if="divingra">
+        <router-link :to="{name:'indredient',params:{id:item}}">
           <figure>
-            <img
-              :src="'https://www.thecocktaildb.com/images/ingredients/'+item.strIngredient+'.png'"
-            >
-            <figcaption class="white--text text-xs-center">{{item.strIngredient}}</figcaption>
+            <img :src="'https://www.thecocktaildb.com/images/ingredients/'+item+'.png'">
+            <figcaption class="white--text text-xs-center">{{item}}</figcaption>
           </figure>
         </router-link>
+      </v-flex>
+      <v-flex xs12 v-if="divBebida==false&&divingra==false && busqueda==true">
+        <p class="white--text text-xs-justify m-4 pl-5 display-1">nº Alcoholic {{bebidas.length}}</p>
+        <p
+          class="white--text text-xs-justify m-4 pl-5 display-1"
+        >nº Ingredients {{ingredient.length}}</p>
       </v-flex>
     </v-layout>
   </div>
@@ -69,35 +80,90 @@ export default {
       palabra: "",
       bebidas: [],
       ingredient: [],
-      ingra: false
+      divingra: false,
+      divBebida: false,
+      listingredient: [],
+      listbebidas: [],
+      busqueda: false,
+      tipos: [
+        "Ordinary Drink",
+        "Cocktail",
+        "Milk / Float / Shake",
+        "Other/Unknown",
+        "Cocoa",
+        "Shot",
+        "Coffee / Tea",
+        "Homemade Liqueur",
+        "Punch / Party Drink",
+        "Beer",
+        "Soft Drink / Soda"
+      ]
     };
   },
   methods: {
     buscarAPI() {
-      var arrayB = [];
+      var arrayBA = [];
+      var arrayBN = [];
       var arrayI = [];
+      this.divingra = false;
+      this.divBebida = false;
       if (this.palabra.length > 1) {
-        this.ingra = false;
-        fetch(
-          "https://www.thecocktaildb.com/api/json/v1/1/search.php?s=" +
-            this.palabra
-        )
-          .then(data => data.json())
-          //.then(data => console.log(data));
-          .then(data => arrayB.push(data.drinks));
-        fetch(
-          "https://www.thecocktaildb.com/api/json/v1/1/search.php?i=" +
-            this.palabra
-        )
-          .then(data => data.json())
-          //.then(data => console.log(data))
-          .then(data => arrayI.push(data.ingredients));
-        this.bebidas = arrayB;
+        arrayBA = this.listbebidas.filter(drink => {
+          var name = drink.strDrink.toLowerCase();
+          var bpalabra = this.palabra.toLowerCase();
+          return name.match(bpalabra);
+        });
+        arrayI = this.listingredient.filter(drink => {
+          var name = drink.toLowerCase();
+          var bpalabra = this.palabra.toLowerCase();
+          return name.match(bpalabra);
+        });
+
+        this.bebidas = arrayBA;
         this.ingredient = arrayI;
         console.log(this.bebidas);
+        console.log(this.bebidasN);
         console.log(this.ingredient);
+        if (arrayBN.length + arrayBA.length + arrayI.length > 0) {
+          this.busqueda = true;
+        }
       }
+    },
+    crearArray() {
+      var arrayI = [];
+      fetch("https://www.thecocktaildb.com/api/json/v1/1/list.php?i=list")
+        .then(data => data.json())
+        //.then(data => console.log(data));
+        .then(function(data) {
+          var ing = data.drinks;
+          for (let h = 0; h < ing.length; h++) {
+            arrayI.push(ing[h].strIngredient1);
+          }
+        });
+      this.listingredient = arrayI;
+
+      var arraya = [];
+      this.tipos.forEach(ti => {
+        var urlAPI =
+          "https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=" + ti;
+        fetch(urlAPI)
+          .then(data => data.json())
+          //.then(data => console.log(data));
+          .then(function(data) {
+            var ing = data.drinks;
+            for (let h = 0; h < ing.length; h++) {
+              if (!arraya.includes(ing[h])) {
+                arraya.push(ing[h]);
+              }
+            }
+          });
+      });
+      console.log(arraya);
+      this.listbebidas = arraya;
     }
+  },
+  created() {
+    this.crearArray();
   }
 };
 </script>
@@ -109,16 +175,31 @@ export default {
 .search .filtro input {
   margin: 2% 0;
 }
+.search figure {
+  margin: 0;
+}
+
 .search figure img {
   width: 100%;
 }
 .search .actived {
   background-color: blueviolet !important;
 }
+.search .desactived {
+  background-color: #c3c3c3;
+}
 .search .resultados {
   margin: 2% 3%;
 }
 .search .resultados .flex {
   padding: 2%;
+}
+.filtro button {
+  font-size: 14px;
+  font-weight: 500;
+  transition: 0.3s cubic-bezier(0.25, 0.8, 0.5, 1), color 1ms;
+  border-radius: 2px;
+  width: 100%;
+  padding: 5px 0;
 }
 </style>

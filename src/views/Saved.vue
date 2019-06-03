@@ -5,7 +5,7 @@
       Get cocktails
       <v-icon right>fas fa-hand-pointer</v-icon>
     </v-btn>
-    <v-layout wrap class="resultados">
+    <v-layout wrap>
       <v-flex xs6 v-for="(item, index) in mybebida" :key="index">
         <router-link :to="{name:'coctel',params:{id:item['0'].idDrink}}">
           <figure>

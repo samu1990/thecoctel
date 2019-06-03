@@ -1,10 +1,10 @@
 <template>
   <v-container grid-list-md text-xs-center class="Home">
-    <div class="fijo">
+    <div>
       <h1 class="Title mt-3">Random Drinks</h1>
       <p class="Title" v-if="usuario!=''">Welcome {{usuario.nombre}}</p>
     </div>
-    <div class="resultados">
+    <div>
       <v-layout row wrap>
         <v-flex xs4 md2 v-for="(bebida, index) in bebidas" :key="index">
           <router-link :to="{name:'coctel',params:{id:bebida.drinks[0].idDrink}}">
@@ -51,18 +51,10 @@ export default {
 .Home figcaption {
   color: white;
 }
-.Home .fijo {
-  position: fixed;
-  width: 100%;
-  background-color: black;
-  z-index: 1;
-}
 .Home {
   padding: 0;
 }
-.Home .resultados {
-  margin: 0 4%;
-  padding-top: 25%;
+.Home figure {
+  margin: 0;
 }
-
 </style>

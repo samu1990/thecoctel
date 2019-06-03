@@ -66,12 +66,13 @@ export default {
           to: { name: "categories" },
           logo: "fas fa-beer"
         },
+        /*
         {
           title: "Ingredients ",
           to: { name: "ingredients" },
           logo: "fas fa-shopping-basket"
         },
-        /*{
+        {
           title: "Glass",
           to: { name: "admin" },
           logo: "fas fa-glass-whiskey"

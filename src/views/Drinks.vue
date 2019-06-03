@@ -1,7 +1,7 @@
 <template>
   <div>
-    <h1 class="Title">Drinks</h1>
     <v-layout wrap class="filtro" justify-center>
+      <h1 class="Title">Drinks</h1>
       <v-flex xs10>
         <v-combobox background-color="white" v-model="tipo" :items="tipos" @change="buscar(tipo)"></v-combobox>
       </v-flex>
@@ -22,7 +22,7 @@
       </v-flex>
     </v-layout>
 
-    <v-layout wrap>
+    <v-layout wrap class="resultados">
       <v-flex xs4 v-for="(item, index) in bebidasFiltro" :key="index" v-if="!filtrar">
         <router-link :to="{name:'coctel',params:{id:item.idDrink}}">
           <figure>
@@ -110,5 +110,8 @@ figure img {
 }
 .filtro input {
   margin: 2% 0;
+}
+.layout.resultados.wrap {
+  padding-top: 43%;
 }
 </style>
