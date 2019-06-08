@@ -18,7 +18,6 @@ auth.onAuthStateChanged(function (user) {
     store.dispatch('setUsuario', user)
   } else {
     console.log("No User")
-
   }
   new Vue({
     router,

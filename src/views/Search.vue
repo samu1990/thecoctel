@@ -18,38 +18,38 @@
             <v-icon>fas fa-angle-right</v-icon>
           </v-btn>
         </v-flex>
-        <v-flex xs12 v-if="busqueda">
-          <v-layout wrap justify-center>
-            <v-flex xs4 class="p-3">
-              <button
-                block
-                color="blue-grey"
-                class="white--text"
-                @click="divingra=false,divBebida=true"
-                :disabled="bebidas.length==0"
-                :class="bebidas.length>0?'actived':'desactived'"
-              >
-                <v-icon class="white--text">fas fa-cocktail</v-icon>
-                <p>Drinks</p>
-              </button>
-            </v-flex>
-            <v-flex xs4 class="p-3">
-              <button
-                color="blue-grey"
-                class="white--text"
-                @click="divingra=true,divBebida=false"
-                :disabled="ingredient.length==0"
-                :class="ingredient.length>0?'actived':'desactived'"
-              >
-                <v-icon dark>fas fa-shopping-basket</v-icon>
-                <p>Ingredients</p>
-              </button>
-            </v-flex>
-          </v-layout>
-        </v-flex>
       </v-layout>
     </div>
     <v-layout wrap class="resultados">
+      <v-flex xs12 v-if="busqueda">
+        <v-layout wrap justify-center>
+          <v-flex xs5 class="p-3">
+            <button
+              block
+              color="blue-grey"
+              class="white--text btnseach"
+              @click="divingra=false,divBebida=true"
+              :disabled="bebidas.length==0"
+              :class="bebidas.length>0?'actived':'desactived'"
+            >
+              <v-icon class="white--text">fas fa-cocktail</v-icon>
+              <p>Drinks</p>
+            </button>
+          </v-flex>
+          <v-flex xs5 class="p-3">
+            <button
+              color="blue-grey"
+              class="white--text btnseach"
+              @click="divingra=true,divBebida=false"
+              :disabled="ingredient.length==0"
+              :class="ingredient.length>0?'actived':'desactived'"
+            >
+              <v-icon dark>fas fa-shopping-basket</v-icon>
+              <p>Ingredients</p>
+            </button>
+          </v-flex>
+        </v-layout>
+      </v-flex>
       <v-flex xs4 v-for="(item, index) in bebidas" :key="index" v-if="divBebida">
         <router-link :to="{name:'coctel',params:{id:item.idDrink}}">
           <figure>
@@ -197,7 +197,7 @@ export default {
 .search .resultados .flex {
   padding: 2%;
 }
-.search .fijo button {
+.search .btnseach {
   font-size: 14px;
   font-weight: 500;
   transition: 0.3s cubic-bezier(0.25, 0.8, 0.5, 1), color 1ms;
@@ -215,6 +215,9 @@ export default {
 
 .search .resultados {
   margin: 0 4%;
-  padding-top: 45%;
+  padding-top: 28%;
+}
+.search .resultados > .xs12.flex {
+  padding: 0%;
 }
 </style>
