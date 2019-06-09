@@ -1,45 +1,35 @@
 <template>
-  <div class="ingredient">
-    <v-container grid-list-md text-xs-center v-for="(ingredient, index) in Arrbebida" :key="index">
-      <div class="fijo">
-        <v-layout row wrap>
-          <v-flex xs4>
-            <v-img
-              class="pt-2"
-              :src="'https://www.thecocktaildb.com/images/ingredients/'+ingredient.ingredients[0].strIngredient+'.png'"
-            ></v-img>
-          </v-flex>
-          <v-flex xs8>
-            <div style="display:table-cell;vertical-align:middle;">
-              <h1 class="Title" style="margin: 38% 0;">{{ingredient.ingredients[0].strIngredient}}</h1>
-            </div>
-          </v-flex>
-          <v-flex xs12>
-            <p
-              class="orange--text text-xs-center"
-            >Drinks with {{ingredient.ingredients[0].strIngredient}}</p>
-          </v-flex>
-        </v-layout>
-      </div>
-      <div class="resultados">
-        <v-layout row wrap>
-          <v-flex xs12>
-            <div>
-              <v-layout row wrap>
-                <v-flex xs3 v-for="(bebida, index) in ADerivadas[0].drinks" :key="index">
-                  <router-link :to="{name:'coctel',params:{id:bebida.idDrink}}">
-                    <figure>
-                      <v-img :src="bebida.strDrinkThumb"></v-img>
-                      <figcaption>{{bebida.strDrink}}</figcaption>
-                    </figure>
-                  </router-link>
-                </v-flex>
-              </v-layout>
-            </div>
-          </v-flex>
-        </v-layout>
-      </div>
-    </v-container>
+  <div class="ingredient white--text text-xs-center">
+    <v-layout>
+      <v-flex xs4 v-for="(item, index) in Arrbebida" :key="index" style="height:80vh;" class="mt-3">
+        <div>
+          <p class="text-xs-center title">{{item.strIngredient}}</p>
+        </div>
+        <div>
+          <v-img
+            class="pt-2"
+            :src="'https://www.thecocktaildb.com/images/ingredients/'+item.strIngredient+'.png'"
+          ></v-img>
+        </div>
+        <div>
+          <p>{{item.strType}}</p>
+          <p>Drinks: {{ADerivadas[0].length}}</p>
+        </div>
+      </v-flex>
+      <v-flex xs8 class="text-xs-center">
+        <p class="mt-2 display-2">Drinks</p>
+        <div class="resultado flex-container">
+          <div xs6 v-for="(item, index) in ADerivadas[0]" :key="index" class="drink p-1">
+            <router-link :to="{name:'coctel',params:{id:item.idDrink}}">
+              <figure>
+                <v-img :src="item.strDrinkThumb"></v-img>
+                <figcaption>{{item.strDrink}}</figcaption>
+              </figure>
+            </router-link>
+          </div>
+        </div>
+      </v-flex>
+    </v-layout>
   </div>
 </template>
 <script>
@@ -48,24 +38,33 @@ export default {
     return {
       Arrbebida: [],
       ADerivadas: [],
-      id: this.$route.params.id
+      id: this.$route.params.id,
+      nameIng: null
     };
   },
   methods: {
     getBebidas(id) {
+      var array = [];
       var urlAPi =
         "https://www.thecocktaildb.com/api/json/v1/1/search.php?i=" + id;
       fetch(urlAPi)
         .then(data => data.json())
-        .then(data => this.Arrbebida.push(data));
+        .then(function(data) {
+          array.push(data.ingredients[0]);
+        });
+      this.Arrbebida = array;
       console.log(this.Arrbebida);
     },
     getDerivadas(id) {
+      var array = [];
       var urlAPi =
         "https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=" + id;
       fetch(urlAPi)
         .then(data => data.json())
-        .then(data => this.ADerivadas.push(data));
+        .then(function(data) {
+          array.push(data.drinks);
+        });
+      this.ADerivadas = array;
       console.log(this.ADerivadas);
     }
   },
@@ -87,14 +86,14 @@ figure {
   padding-top: 1%;
 }
 
-.ingredient .resultados {
-  margin: 0 4%;
-  padding-top: 45%;
+.ingredient .resultado {
+  overflow: auto;
+  max-height: 75vh;
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 2%;
 }
-.ingredient .container {
-  padding: 0;
-}
-.fijo .v-image__image.v-image__image--cover {
-  margin-top: 4%;
+.ingredient .resultado .drink {
+  width: 50%;
 }
 </style>

@@ -23,12 +23,12 @@
     <v-layout wrap class="resultados">
       <v-flex xs12 v-if="busqueda">
         <v-layout wrap justify-center>
-          <v-flex xs5 class="p-3">
+          <v-flex xs4 class="p-2">
             <button
               block
               color="blue-grey"
               class="white--text btnseach"
-              @click="divingra=false,divBebida=true"
+              @click="divingra=false,divBebida=true,divBebidaN=false"
               :disabled="bebidas.length==0"
               :class="bebidas.length>0?'actived':'desactived'"
             >
@@ -36,11 +36,24 @@
               <p>Drinks</p>
             </button>
           </v-flex>
-          <v-flex xs5 class="p-3">
+          <v-flex xs4 class="p-2">
+            <button
+              block
+              color="blue-grey"
+              class="white--text btnseach"
+              @click="divingra=false,divBebida=false,divBebidaN=true"
+              :disabled="bebidasNo.length==0"
+              :class="bebidasNo.length>0?'actived':'desactived'"
+            >
+              <v-icon class="white--text">fas fa-mug-hot</v-icon>
+              <p>Non Alcoholic</p>
+            </button>
+          </v-flex>
+          <v-flex xs4 class="p-2">
             <button
               color="blue-grey"
               class="white--text btnseach"
-              @click="divingra=true,divBebida=false"
+              @click="divingra=true,divBebida=false,divBebidaN=false"
               :disabled="ingredient.length==0"
               :class="ingredient.length>0?'actived':'desactived'"
             >
@@ -58,6 +71,14 @@
           </figure>
         </router-link>
       </v-flex>
+      <v-flex xs4 v-for="(item, index) in bebidasNo" :key="index" v-if="divBebidaN">
+        <router-link :to="{name:'coctel',params:{id:item.idDrink}}">
+          <figure>
+            <img :src="item.strDrinkThumb">
+            <figcaption class="white--text text-xs-center">{{item.strDrink}}</figcaption>
+          </figure>
+        </router-link>
+      </v-flex>
       <v-flex xs4 v-for="(item, index) in ingredient" :key="index" v-if="divingra">
         <router-link :to="{name:'indredient',params:{id:item}}">
           <figure>
@@ -66,11 +87,14 @@
           </figure>
         </router-link>
       </v-flex>
-      <v-flex xs12 v-if="divBebida==false&&divingra==false && busqueda==true">
-        <p class="white--text text-xs-justify m-4 pl-5 display-1">nº Alcoholic {{bebidas.length}}</p>
-        <p
-          class="white--text text-xs-justify m-4 pl-5 display-1"
-        >nº Ingredients {{ingredient.length}}</p>
+
+      <v-flex xs12 v-if="divBebida==false&&divingra==false&& divBebidaN==false && busqueda==true">
+        <p class="white--text text-xs-justify m-4 display-1">nº Alcoholic {{bebidas.length}}</p>
+        <p class="white--text text-xs-justify m-4 display-1">nº Non Alcoholic {{bebidasNo.length}}</p>
+        <p class="white--text text-xs-justify m-4 display-1">nº Ingredients {{ingredient.length}}</p>
+      </v-flex>
+      <v-flex xs12 v-if="!busqueda">
+        <v-img :src="require('../assets/fondo.jpg')"></v-img>
       </v-flex>
     </v-layout>
   </div>
@@ -83,10 +107,13 @@ export default {
       palabra: "",
       bebidas: [],
       ingredient: [],
+      bebidasNo: [],
       divingra: false,
       divBebida: false,
+      divBebidaN: false,
       listingredient: [],
       listbebidas: [],
+      listbebidasNa: [],
       busqueda: false,
       tipos: [
         "Ordinary Drink",
@@ -121,11 +148,17 @@ export default {
           var bpalabra = this.palabra.toLowerCase();
           return name.match(bpalabra);
         });
+        arrayBN = this.listbebidasNa.filter(drink => {
+          var name = drink.strDrink.toLowerCase();
+          var bpalabra = this.palabra.toLowerCase();
+          return name.match(bpalabra);
+        });
 
         this.bebidas = arrayBA;
         this.ingredient = arrayI;
+        this.bebidasNo = arrayBN;
         console.log(this.bebidas);
-        console.log(this.bebidasN);
+        console.log(this.bebidasNo);
         console.log(this.ingredient);
         if (arrayBN.length + arrayBA.length + arrayI.length > 0) {
           this.busqueda = true;
@@ -133,10 +166,11 @@ export default {
       }
     },
     crearArray() {
+      //Crear Array Ingrediente
       var arrayI = [];
       fetch("https://www.thecocktaildb.com/api/json/v1/1/list.php?i=list")
         .then(data => data.json())
-        //.then(data => console.log(data));
+        //.then(data => console.log(data.drinks));
         .then(function(data) {
           var ing = data.drinks;
           for (let h = 0; h < ing.length; h++) {
@@ -144,6 +178,25 @@ export default {
           }
         });
       this.listingredient = arrayI;
+      //Crear Array Bebida no Alcolica
+
+      var arrayNa = [];
+      var arrayNoName = [];
+      fetch(
+        "https://www.thecocktaildb.com/api/json/v1/1/filter.php?a=Non_Alcoholic"
+      )
+        .then(data => data.json())
+        //.then(data => console.log(data.drinks));
+        .then(function(data) {
+          var ing = data.drinks;
+          for (let h = 0; h < ing.length; h++) {
+            if (!arrayNa.includes(ing[h])) {
+              arrayNa.push(ing[h]);
+              arrayNoName.push(ing[h].idDrink);
+            }
+          }
+        });
+      this.listbebidasNa = arrayNa;
 
       var arraya = [];
       this.tipos.forEach(ti => {
@@ -154,15 +207,21 @@ export default {
           //.then(data => console.log(data));
           .then(function(data) {
             var ing = data.drinks;
+            //console.log(arrayNa);
             for (let h = 0; h < ing.length; h++) {
               if (!arraya.includes(ing[h])) {
-                arraya.push(ing[h]);
+                if (!arrayNoName.includes(ing[h].idDrink)) {
+                  arraya.push(ing[h]);
+                }
               }
             }
           });
       });
-      console.log(arraya);
+
       this.listbebidas = arraya;
+      // console.log("Inge:", this.listingredient);
+      console.log("BebidaAl:", this.listbebidas);
+      console.log("BebidaNal:", this.listbebidasNa);
     }
   },
   created() {

@@ -15,7 +15,6 @@ export default new Vuex.Store({
         state.usuario = ''
       } else {
         state.usuario = payload
-        console.log(payload)
       }
     }
   },
@@ -38,7 +37,6 @@ export default new Vuex.Store({
             .doc(usuario.uid)
             .set(usuario);
           commit('nuevoUsuario', usuario)
-          console.log('user:', this.usuario);
         }
 
       } catch (error) {
